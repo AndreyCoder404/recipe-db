@@ -2,8 +2,19 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"net/http"
 )
+
+type Recipe struct {
+	ID           int     `json:"id"`
+	Name         string  `json:"name"`
+	Protein      float64 `json:"protein"`
+	Fat          float64 `json:"fat"`
+	Carbs        float64 `json:"carbs"`
+	Calories     int     `json:"calories"`
+	Instructions string  `json:"instructions"`
+}
 
 func GetRecipes(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -14,6 +25,17 @@ func GetRecipes(db *sql.DB) http.HandlerFunc {
 		}
 		defer rows.Close()
 
-		w.Write([]byte("Recipes fetched!")) // Заменим на реальные данные позже
+		var recipes []Recipe
+		for rows.Next() {
+			var r Recipe
+			if err := rows.Scan(&r.ID, &r.Name, &r.Protein, &r.Fat, &r.Carbs, &r.Calories, &r.Instructions); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			recipes = append(recipes, r)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(recipes)
 	}
 }
