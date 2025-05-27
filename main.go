@@ -4,28 +4,29 @@ import (
 	"github.com/AndreyCoder404/recipe-db/db"
 	"github.com/AndreyCoder404/recipe-db/handlers"
 	"github.com/gorilla/mux"
-	"log"
+	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
 func main() {
-	log.Println("Starting application...")
+	logrus.SetLevel(logrus.DebugLevel) // Устанавливаем уровень логирования (Debug для детализации)
+	logrus.Debug("Starting application...")
 
 	db, err := db.Connect()
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		logrus.WithError(err).Fatal("Failed to connect to database")
 	}
-	log.Println("Successfully connected to database")
+	logrus.Info("Successfully connected to database")
 	defer func() {
-		log.Println("Closing database connection")
+		logrus.Info("Closing database connection")
 		db.Close()
 	}()
 
-	log.Println("Setting up router")
+	logrus.Info("Setting up router")
 	r := mux.NewRouter()
 	r.HandleFunc("/recipes", handlers.GetRecipes(db))
-	log.Println("Router setup complete, registered /recipes endpoint")
+	logrus.Info("Router setup complete, registered /recipes endpoint")
 
-	log.Println("Server running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	logrus.Info("Server running on :8080")
+	logrus.Fatal(http.ListenAndServe(":8080", r))
 }
