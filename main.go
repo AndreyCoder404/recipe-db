@@ -9,14 +9,22 @@ import (
 )
 
 func main() {
+	log.Println("Starting application...")
+
 	db, err := db.Connect()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	defer db.Close()
+	log.Println("Successfully connected to database")
+	defer func() {
+		log.Println("Closing database connection")
+		db.Close()
+	}()
 
+	log.Println("Setting up router")
 	r := mux.NewRouter()
 	r.HandleFunc("/recipes", handlers.GetRecipes(db))
+	log.Println("Router setup complete, registered /recipes endpoint")
 
 	log.Println("Server running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
