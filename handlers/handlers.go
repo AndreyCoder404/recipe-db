@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// Recipe представляет структуру рецепта
 type Recipe struct {
 	ID           int     `json:"id"`
 	Name         string  `json:"name"`
@@ -16,6 +17,7 @@ type Recipe struct {
 	Instructions string  `json:"instructions"`
 }
 
+// GetRecipes возвращает список рецептов
 func GetRecipes(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		rows, err := db.Query("SELECT id, name, protein, fat, carbs, calories, instructions FROM recipes")
@@ -36,6 +38,8 @@ func GetRecipes(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(recipes)
+		if err := json.NewEncoder(w).Encode(recipes); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
