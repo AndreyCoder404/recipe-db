@@ -84,60 +84,23 @@ docker-compose up -d
 docker ps
 
 
-API-спецификация
-На данный момент доступен один эндпоинт.
-
-GET /recipes
-Описание: Возвращает список всех рецептов в базе данных.
-Метод: GET
-Путь: /recipes
-Параметры: Отсутствуют.
-Заголовки:
-Accept: application/json (рекомендуется).
-Формат ответа: JSON.
-Статус-коды:
-200 OK: Успешный запрос.
-500 Internal Server Error: Ошибка на стороне сервера (например, проблемы с базой данных).
-
-
-Пример запроса
-curl http://localhost:8080/recipes
-
-
-Пример ответа
-[
-    {
-        "id": 1,
-        "name": "Test Recipe",
-        "protein": 10,
-        "fat": 5,
-        "carbs": 20,
-        "calories": 200,
-        "instructions": "Cook for 10 minutes"
-    }
-]
-
-
-
-## Использование через Postman:
-1. Откройте Postman.
-2. Создайте новый запрос:
---Метод: GET.
---URL: http://localhost:8080/recipes.
---Заголовки: Accept: application/json.
-3. Нажмите "Send".
-. Проверьте ответ (должен быть таким же, как в примере выше).
-
-
 ## Структура ответа:
+
 Каждый объект Recipe содержит следующие поля:
 
+
 id (int): Уникальный идентификатор рецепта.
+
 name (string): Название рецепта.
+
 protein (float): Количество белков (в граммах).
+
 fat (float): Количество жиров (в граммах).
+
 carbs (float): Количество углеводов (в граммах).
+
 calories (int): Калорийность (в ккал).
+
 instructions (string): Инструкции по приготовлению.
 
 
@@ -147,18 +110,31 @@ instructions (string): Инструкции по приготовлению.
 
 recipe-db/
 ├── db/
+
 │   └── db.go              # Подключение к PostgreSQL
+
 ├── docker-compose.yml     # Конфигурация Docker
+
 ├── go.mod                 # Зависимости Go
+
 ├── go.sum                 # Контрольный файл зависимостей
+
 ├── handlers/
+
 │   ├── handlers.go        # Обработчики эндпоинтов
+
 │   └── handlers_test.go   # Тесты
+
 ├── init.sql               # Миграция для базы данных
+
 ├── main.go                # Основной файл приложения
+
 ├── models/                # Пустая папка (для будущих моделей)
+
 └── .github/workflows/
+
     └── ci.yml             # CI/CD через GitHub Actions
+    
 
 ## Работа с Git
 
@@ -175,12 +151,14 @@ git checkout -b feature/new-feature
 --Протестируйте локально:
 
 go test ./handlers -v
+
 go run main.go
 
 
 3. Закоммитьте изменения:
 
 git add .
+
 git commit -m "Добавлен эндпоинт POST /recipes"
 
 4. Отправьте изменения:
@@ -189,22 +167,27 @@ git push origin feature/new-feature
 
 
 5. Создайте Pull Request:
+   
 -- Перейдите на https://github.com/AndreyCoder404/recipe-db/pulls.
+   
 -- Создайте PR из ветки feature/new-feature в main.
+   
 -- Опишите изменения и укажите, какие тесты добавлены.
 
 ## CI/CD
 1. Проект использует GitHub Actions для автоматизации:
+   
 -- Файл .github/workflows/ci.yml запускает тесты при каждом пушу и PR.
+   
 -- Тесты выполняются с PostgreSQL (сервис настроен в ci.yml).
 
-2. Проверьте статус CI/CD:
+
+3. Проверьте статус CI/CD:
+   
 https://github.com/AndreyCoder404/recipe-db/actions
 
 
-### Какие есть ограничения?
-
-## Текущие недочёты
+### Какие есть ограничения? Текущие недочёты
 
 1. Ограниченная функциональность:
 --Доступен только один эндпоинт (GET /recipes).
@@ -221,9 +204,9 @@ https://github.com/AndreyCoder404/recipe-db/actions
 --Swagger-документация начата, но требует доработки.
 
 
-### Планы на будущее
+## Планы на будущее
 
-## Дорожная карта
+### Дорожная карта
 
 Этап 6: Расширение функциональности:
 Добавить CRUD-эндпоинты:
